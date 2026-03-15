@@ -90,11 +90,11 @@ export function ShareScreen({
 
           {/* Share Card Preview */}
           <div className="border-4 border-[#CE2939] rounded-2xl p-6 md:p-8 bg-gradient-to-br from-white to-gray-50 shadow-lg">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <div className="w-2 h-12 bg-[#CE2939]" />
-              <div className="w-2 h-12 bg-white border-2 border-gray-300" />
-              <div className="w-2 h-12 bg-[#477050]" />
-            </div>
+            {/* <div className="flex flex-col items-center justify-center gap-1 mb-6">
+              <div className="w-12 h-2 bg-[#CE2939]" />
+              <div className="w-12 h-2 bg-white border-2 border-gray-300" />
+              <div className="w-12 h-2 bg-[#477050]" />
+            </div> */}
 
             <h3 className="text-2xl font-bold text-center text-gray-900 mb-4">
               {userName} elkötelezte magát

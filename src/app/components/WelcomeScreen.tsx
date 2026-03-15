@@ -13,6 +13,7 @@ export function WelcomeScreen({
   initialName = "",
 }: WelcomeScreenProps) {
   const [name, setName] = useState(initialName);
+  const [region, setRegion] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,11 +26,11 @@ export function WelcomeScreen({
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="w-3 h-16 bg-[#CE2939]" />
-            <div className="w-3 h-16 bg-white border-2 border-gray-200" />
-            <div className="w-3 h-16 bg-[#477050]" />
-          </div>
+          {/* <div className="flex flex-col items-center justify-center gap-1 mb-6">
+              <div className="w-12 h-2 bg-[#CE2939]" />
+              <div className="w-12 h-2 bg-white border-2 border-gray-300" />
+              <div className="w-12 h-2 bg-[#477050]" />
+            </div> */}
           <h1 className="text-4xl font-bold text-gray-900">Április 12</h1>
           <p className="text-xl text-gray-600">
             Mozgósítsuk együtt az embereket!
@@ -46,7 +47,23 @@ export function WelcomeScreen({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Add meg a neved"
+              placeholder="pl. Ferenc"
+              className="h-14 text-lg"
+              required
+              autoFocus
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="region" className="text-md">
+              Régiód / városod (opcionális)
+            </Label>
+            <Input
+              id="region"
+              type="text"
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              placeholder="pl. Pécs"
               className="h-14 text-lg"
               required
               autoFocus
