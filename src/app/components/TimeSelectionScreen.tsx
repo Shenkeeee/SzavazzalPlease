@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Calendar, Clock } from "lucide-react";
 
@@ -59,17 +60,39 @@ export function TimeSelectionScreen({
 
   const canProceed = selectedDate && selectedTime;
 
+  // Animációs variációk a rácshoz
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.03 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.9, y: 10 },
+    visible: { opacity: 1, scale: 1, y: 0 },
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen flex flex-col bg-white"
+    >
       <div className="flex-1 flex flex-col p-6 max-w-4xl mx-auto w-full">
         <button
           onClick={onBack}
-          className="text-gray-600 hover:text-gray-900 mb-6 text-left"
+          className="text-gray-600 hover:text-gray-900 mb-6 text-left transition-transform hover:-translate-x-1"
         >
           ← Vissza
         </button>
 
-        <div className="space-y-6 mb-8">
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="space-y-6 mb-8"
+        >
           <div className="flex items-center gap-3">
             <Calendar className="w-8 h-8 text-[#CE2939]" />
             <h2 className="text-3xl font-bold text-gray-900">
@@ -79,7 +102,7 @@ export function TimeSelectionScreen({
           <p className="text-lg text-gray-600">
             Válaszd ki a napot és az időpontot, amikor kapcsolatba lépsz velük
           </p>
-        </div>
+        </motion.div>
 
         <div className="space-y-8">
           {/* Date Selection */}
@@ -88,28 +111,44 @@ export function TimeSelectionScreen({
               <Calendar className="w-5 h-5" />
               Válassz napot
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-2 md:grid-cols-4 gap-3"
+            >
               {dates.map((dateOption) => (
-                <button
+                <motion.button
                   key={dateOption.date}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedDate(dateOption.date)}
-                  className={`p-4 rounded-lg border-2 transition-all ${
+                  className={`p-4 rounded-lg border-2 transition-colors relative overflow-hidden ${
                     selectedDate === dateOption.date
                       ? "border-[#CE2939] bg-[#CE2939] text-white"
                       : dateOption.featured
                         ? "border-[#477050] hover:border-[#477050] hover:bg-[#477050]/10"
-                        : "border-gray-200 hover:border-gray-300"
+                        : "border-gray-200 hover:border-gray-300 shadow-sm"
                   } ${dateOption.featured ? "font-bold" : ""}`}
                 >
-                  <div className="text-sm">{dateOption.day}</div>
+                  <div className="text-xs uppercase opacity-80">
+                    {dateOption.day}
+                  </div>
                   <div
                     className={`text-base ${dateOption.featured ? "text-lg" : ""}`}
                   >
                     {dateOption.label}
                   </div>
-                </button>
+                  {selectedDate === dateOption.date && (
+                    <motion.div
+                      layoutId="outlineDate"
+                      className="absolute inset-0 border-2 border-white rounded-lg"
+                    />
+                  )}
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           </div>
 
           {/* Time Selection */}
@@ -118,34 +157,52 @@ export function TimeSelectionScreen({
               <Clock className="w-5 h-5" />
               Válassz időpontot
             </h3>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-3 md:grid-cols-6 gap-3"
+            >
               {timeSlots.map((time) => (
-                <button
+                <motion.button
                   key={time}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedTime(time)}
-                  className={`p-3 rounded-lg border-2 transition-all ${
+                  className={`p-3 rounded-lg border-2 transition-colors ${
                     selectedTime === time
                       ? "border-[#477050] bg-[#477050] text-white"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   {time}
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           </div>
 
-          <Button
-            onClick={handleSubmit}
-            className="w-full h-14 text-lg bg-[#477050] hover:bg-[#3A5A40] text-white mt-8"
-            disabled={!canProceed}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
           >
-            {canProceed
-              ? "Tovább a megosztáshoz"
-              : "Válassz napot és időpontot"}
-          </Button>
+            <Button
+              onClick={handleSubmit}
+              className={`w-full h-14 text-lg mt-8 transition-all duration-300 ${
+                canProceed
+                  ? "bg-[#477050] hover:bg-[#3A5A40] text-white shadow-lg shadow-green-100"
+                  : "bg-gray-100 text-gray-400"
+              }`}
+              disabled={!canProceed}
+            >
+              {canProceed
+                ? "Tovább a megosztáshoz"
+                : "Válassz napot és időpontot"}
+            </Button>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

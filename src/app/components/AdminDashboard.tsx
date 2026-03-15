@@ -1,16 +1,18 @@
+import { motion } from "framer-motion";
 import {
   BarChart3,
   MousePointer2,
   Share2,
   MapPin,
   TrendingUp,
+  Activity,
 } from "lucide-react";
 
 export function AdminDashboard() {
   const campaignStats = {
     totalLinkCopies: 1245,
     totalReferralClicks: 4589,
-    conversionRate: "0.4x", // Egy link másolásból átlagosan ennyi kattintás jön
+    conversionRate: "0.4x",
     topRegions: [
       { name: "Budapest", clicks: 1542 },
       { name: "Pécs", clicks: 420 },
@@ -19,109 +21,197 @@ export function AdminDashboard() {
     ],
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans"
+    >
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Admin Header */}
-        <div className="flex items-center justify-between border-b pb-4">
+        <div className="flex items-center justify-between border-b border-slate-200 pb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">
-              Kampány Felügyelet
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+              Kampány <span className="text-[#CE2939]">Felügyelet</span>
             </h1>
-            <p className="text-slate-500">
-              Valós idejű mozgósítási statisztikák
-            </p>
+            <div className="flex items-center gap-2 text-slate-500 mt-1">
+              <Activity className="w-4 h-4 text-green-500" />
+              <p className="font-medium text-sm">
+                Valós idejű mozgósítási statisztikák
+              </p>
+            </div>
           </div>
-          <div className="bg-[#CE2939] text-white px-4 py-2 rounded-full text-sm font-bold animate-pulse">
-            LIVE ADATOK
-          </div>
+          <motion.div
+            animate={{ opacity: [1, 0.5, 1] }}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+            className="bg-[#CE2939] text-white px-4 py-1.5 rounded-full text-xs font-black letter tracking-widest uppercase"
+          >
+            ● Live Adatok
+          </motion.div>
         </div>
 
         {/* Key Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div className="flex items-center gap-3 text-slate-500 mb-2">
-              <Share2 className="w-5 h-5" />
-              <span className="font-medium">Link másolások</span>
-            </div>
-            <div className="text-3xl font-black">
-              {campaignStats.totalLinkCopies.toLocaleString()}
-            </div>
-            <div className="text-xs text-green-600 font-bold mt-2">
-              ↑ 12% az elmúlt órában
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div className="flex items-center gap-3 text-slate-500 mb-2">
-              <MousePointer2 className="w-5 h-5" />
-              <span className="font-medium">Referral kattintások</span>
-            </div>
-            <div className="text-3xl font-black">
-              {campaignStats.totalReferralClicks.toLocaleString()}
-            </div>
-            <div className="text-xs text-green-600 font-bold mt-2">
-              ↑ 8% az elmúlt órában
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div className="flex items-center gap-3 text-slate-500 mb-2">
-              <TrendingUp className="w-5 h-5" />
-              <span className="font-medium">Conversion ráta</span>
-            </div>
-            <div className="text-3xl font-black text-[#477050]">
-              {campaignStats.conversionRate}
-            </div>
-            <div className="text-xs text-slate-400 mt-2">
-              Kattintás / Megosztás arány
-            </div>
-          </div>
+          {[
+            {
+              label: "Link másolások",
+              val: campaignStats.totalLinkCopies,
+              icon: Share2,
+              trend: "↑ 12%",
+            },
+            {
+              label: "Referral kattintások",
+              val: campaignStats.totalReferralClicks,
+              icon: MousePointer2,
+              trend: "↑ 8%",
+            },
+            {
+              label: "Conversion ráta",
+              val: campaignStats.conversionRate,
+              icon: TrendingUp,
+              trend: "Stabil",
+              color: "text-[#477050]",
+            },
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-2 bg-slate-50 rounded-lg">
+                  <stat.icon className="w-5 h-5 text-slate-600" />
+                </div>
+                <span
+                  className={`text-xs font-bold ${stat.trend.includes("↑") ? "text-green-600" : "text-slate-400"}`}
+                >
+                  {stat.trend}
+                </span>
+              </div>
+              <div
+                className={`text-4xl font-black ${stat.color || "text-slate-900"}`}
+              >
+                {typeof stat.val === "number"
+                  ? stat.val.toLocaleString()
+                  : stat.val}
+              </div>
+              <div className="text-sm font-bold text-slate-400 uppercase tracking-wider mt-1">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Regionális ranglista */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+          {/* Regionális ranglista - Animált oszlopokkal */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200"
+          >
+            <h3 className="text-lg font-black mb-6 flex items-center gap-2 uppercase tracking-tight">
               <MapPin className="w-5 h-5 text-[#CE2939]" /> Legaktívabb
               területek
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-6">
               {campaignStats.topRegions.map((region, i) => (
-                <div key={i} className="space-y-1">
+                <div key={i} className="space-y-2">
                   <div className="flex justify-between text-sm font-bold">
-                    <span>{region.name}</span>
-                    <span>{region.clicks.toLocaleString()} click</span>
+                    <span className="text-slate-700">{region.name}</span>
+                    <span className="text-slate-900">
+                      {region.clicks.toLocaleString()} kattintás
+                    </span>
                   </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-[#477050] h-full transition-all duration-1000"
-                      style={{
+                  <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{
                         width: `${(region.clicks / campaignStats.topRegions[0].clicks) * 100}%`,
                       }}
+                      transition={{
+                        duration: 1.5,
+                        ease: "easeOut",
+                        delay: 0.5 + i * 0.1,
+                      }}
+                      className="bg-gradient-to-r from-[#477050] to-[#5ba36a] h-full rounded-full"
                     />
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Technikai log (példa) */}
-          <div className="bg-slate-900 text-slate-300 p-6 rounded-xl shadow-sm font-mono text-xs">
-            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" /> Rendszernapló (Logs)
+          {/* Technikai log - Gépelés effekttel */}
+          <motion.div
+            variants={itemVariants}
+            className="bg-slate-900 text-slate-300 p-8 rounded-2xl shadow-xl font-mono text-[11px] relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-[#CE2939] to-green-500 opacity-50" />
+            <h3 className="text-white font-bold mb-6 flex items-center gap-2 uppercase tracking-widest text-xs opacity-50">
+              <BarChart3 className="w-4 h-4" /> Rendszernapló log
             </h3>
-            <div className="space-y-1 opacity-80">
-              <p>[23:41:02] NEW_PLEDGE: User from Budapest created a plan</p>
-              <p>[23:41:45] LINK_SHARED: WhatsApp click detected from Pécs</p>
-              <p className="text-green-400">
-                [23:42:10] GOAL_REACHED: 24,000 users milestone
-              </p>
-              <p>[23:42:30] REFERRAL_HIT: Unique ID: x7f2-a9b1 clicked</p>
+            <div className="space-y-2">
+              {[
+                {
+                  time: "23:41:02",
+                  msg: "NEW_PLEDGE: User from Budapest created a plan",
+                  color: "text-slate-400",
+                },
+                {
+                  time: "23:41:45",
+                  msg: "LINK_SHARED: WhatsApp click detected from Pécs",
+                  color: "text-slate-400",
+                },
+                {
+                  time: "23:42:10",
+                  msg: "GOAL_REACHED: 24,000 users milestone",
+                  color: "text-green-400 font-bold",
+                },
+                {
+                  time: "23:42:30",
+                  msg: "REFERRAL_HIT: Unique ID: x7f2-a9b1 clicked",
+                  color: "text-blue-400",
+                },
+                {
+                  time: "23:43:01",
+                  msg: "SYSTEM: Database optimization complete",
+                  color: "text-slate-500",
+                },
+              ].map((log, i) => (
+                <motion.p
+                  key={i}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1 + i * 0.3 }}
+                  className="flex gap-3"
+                >
+                  <span className="text-slate-600">[{log.time}]</span>
+                  <span className={log.color}>{log.msg}</span>
+                </motion.p>
+              ))}
+              <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8 }}
+                className="inline-block w-2 h-4 bg-[#CE2939] align-middle ml-1"
+              />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

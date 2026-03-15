@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import {
@@ -95,13 +96,11 @@ export function DashboardScreen({
 
   const contactedCount = friends.filter((friend) => friend.contacted).length;
   const committedCount = friends.filter((friend) => friend.committed).length;
-  const tasksCompleted = tasks.filter(
-    (task: { completed: boolean }) => task.completed,
-  ).length;
-  const totalProgress =
-    ((contactedCount + committedCount + tasksCompleted) /
-      (friends.length * 2 + tasks.length)) *
-    100;
+  const tasksCompleted = tasks.filter((task) => task.completed).length;
+
+  const totalItems = friends.length * 2 + tasks.length;
+  const currentProgress = contactedCount + committedCount + tasksCompleted;
+  const totalProgress = (currentProgress / totalItems) * 100;
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -121,208 +120,245 @@ export function DashboardScreen({
     ];
     return `${months[date.getMonth()]} ${date.getDate()}`;
   };
+  // Animációs variációk
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="min-h-screen bg-gradient-to-b from-white to-gray-50 pb-12"
+    >
       <div className="max-w-4xl mx-auto p-6 space-y-6">
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border-t-4 border-[#CE2939]">
+        {/* Header - Statikusabb, de finom belépéssel */}
+        <motion.div
+          variants={cardVariants}
+          className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border-t-4 border-[#CE2939]"
+        >
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-black text-gray-900 mb-2">
                 Szia, {userName}! 👋
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 font-medium">
                 Itt követheted a mozgósítási tervedet
               </p>
             </div>
-            <button
+            <motion.button
+              whileHover={{ rotate: 90 }}
               onClick={onReset}
-              className="text-gray-500 hover:text-gray-700 p-2"
-              title="Új tervezés"
+              className="text-gray-400 hover:text-[#CE2939] p-2 transition-colors"
             >
               <Edit className="w-5 h-5" />
-            </button>
+            </motion.button>
           </div>
 
-          {/* Progress */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-gray-700">
-                Összes haladás
+          {/* Progress Bar - Animált szélességgel */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-bold text-gray-500 uppercase tracking-wider">
+                Személyes vállalásod állapota
               </span>
-              <span className="text-sm font-bold text-[#477050]">
+              <motion.span
+                key={currentProgress}
+                initial={{ scale: 1.2, color: "#477050" }}
+                animate={{ scale: 1, color: "#477050" }}
+                className="text-lg font-black"
+              >
                 {Math.round(totalProgress)}%
-              </span>
+              </motion.span>
             </div>
-            <Progress value={totalProgress} className="h-3" />
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-[#CE2939]">
-                {contactedCount}/{friends.length}
-              </div>
-              <div className="text-xs text-gray-600 mt-1">
-                Kapcsolatba lépve
-              </div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-[#477050]">
-                {committedCount}/{friends.length}
-              </div>
-              <div className="text-xs text-gray-600 mt-1">
-                Elkötelezte magát
-              </div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">
-                {tasksCompleted}/{tasks.length}
-              </div>
-              <div className="text-xs text-gray-600 mt-1">Feladat kész</div>
+            <div className="relative h-4 w-full bg-gray-100 rounded-full overflow-hidden">
+              <motion.div
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#477050] to-[#5ba36a]"
+                initial={{ width: 0 }}
+                animate={{ width: `${totalProgress}%` }}
+                transition={{ duration: 1, ease: "circOut" }}
+              />
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Reminder */}
-        <div className="bg-gradient-to-r from-[#CE2939] to-[#B02030] rounded-2xl shadow-lg p-6 text-white">
-          <div className="flex items-center gap-3 mb-3">
+        {/* Reminder - Figyelemfelkeltő úszással */}
+        <motion.div
+          variants={cardVariants}
+          whileHover={{ scale: 1.01 }}
+          className="bg-gradient-to-r from-[#CE2939] to-[#B02030] rounded-2xl shadow-lg p-6 text-white shadow-red-200"
+        >
+          <div className="flex items-center gap-3 mb-2">
             <Calendar className="w-6 h-6" />
-            <h2 className="text-xl font-bold">Emlékeztető beállítva</h2>
+            <h2 className="text-xl font-bold uppercase tracking-tight">
+              Emlékeztető
+            </h2>
           </div>
-          <p className="text-lg">
-            <span className="font-bold">{formatDate(scheduledTime.date)}</span>{" "}
-            - <span className="font-bold">{scheduledTime.time}</span>
-          </p>
-          <p className="text-sm opacity-90 mt-2">
-            Ekkor lépj kapcsolatba az ismerőseiddel!
-          </p>
-        </div>
+          <div className="text-2xl font-black">
+            {formatDate(scheduledTime.date)} — {scheduledTime.time}
+          </div>
+        </motion.div>
 
         {/* Friends List */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-6">
+        <motion.div
+          variants={cardVariants}
+          className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
+        >
+          <div className="flex items-center gap-3 mb-8">
             <Users className="w-6 h-6 text-[#CE2939]" />
-            <h2 className="text-2xl font-bold text-gray-900">
-              Mozgósítandó személyek ({friends.length})
+            <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">
+              Ismerőseid ({friends.length})
             </h2>
           </div>
 
           <div className="space-y-4">
             {friends.map((friend, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="border-2 border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-all"
+                layout
+                className={`border-2 rounded-2xl p-5 transition-colors ${
+                  friend.contacted && friend.committed
+                    ? "border-green-100 bg-green-50/30"
+                    : "border-gray-100 bg-white"
+                }`}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                <div className="flex items-center justify-between mb-4">
+                  <h3
+                    className={`text-xl font-bold ${friend.contacted && friend.committed ? "text-green-800" : "text-gray-900"}`}
+                  >
                     {friend.name}
                   </h3>
-                  {friend.contacted && friend.committed && (
-                    <Trophy className="w-5 h-5 text-[#477050]" />
-                  )}
+                  <AnimatePresence>
+                    {friend.contacted && friend.committed && (
+                      <motion.div
+                        initial={{ scale: 0, rotate: -45 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0 }}
+                      >
+                        <Trophy className="w-6 h-6 text-[#477050]" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <Checkbox
-                      checked={friend.contacted}
-                      onCheckedChange={() => toggleFriendContacted(index)}
-                    />
-                    <span
-                      className={
-                        friend.contacted
-                          ? "text-gray-500 line-through"
-                          : "text-gray-700"
-                      }
-                    >
-                      Kapcsolatba léptem
-                    </span>
-                  </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <label className="flex items-center gap-3 group cursor-pointer">
+                      <div className="relative flex items-center">
+                        <Checkbox
+                          checked={friend.contacted}
+                          onCheckedChange={() => toggleFriendContacted(index)}
+                        />
+                      </div>
+                      <span
+                        className={`font-medium transition-all ${friend.contacted ? "text-gray-400 line-through" : "text-gray-700"}`}
+                      >
+                        Kapcsolatba léptem
+                      </span>
+                    </label>
 
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <Checkbox
-                      checked={friend.committed}
-                      onCheckedChange={() => toggleFriendCommitted(index)}
-                    />
-                    <span
-                      className={
-                        friend.committed
-                          ? "text-gray-500 line-through"
-                          : "text-gray-700"
-                      }
-                    >
-                      Elkötelezte magát
-                    </span>
-                  </label>
+                    <label className="flex items-center gap-3 group cursor-pointer">
+                      <Checkbox
+                        checked={friend.committed}
+                        onCheckedChange={() => toggleFriendCommitted(index)}
+                      />
+                      <span
+                        className={`font-medium transition-all ${friend.committed ? "text-gray-400 line-through" : "text-gray-700"}`}
+                      >
+                        Visszaigazolta a részvételt
+                      </span>
+                    </label>
+                  </div>
 
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-2">
                     <Button
-                      size="sm"
                       variant="outline"
-                      className="flex-1 border-[#477050] text-[#477050] hover:bg-[#477050] hover:text-white"
+                      className="flex-1 rounded-xl border-green-200 text-[#477050] hover:bg-green-50"
                       onClick={() => window.open(`tel:${friend.name}`, "_self")}
                     >
-                      <Phone className="w-4 h-4 mr-2" />
-                      Hívás
+                      <Phone className="w-4 h-4 mr-2" /> Hívás
                     </Button>
                     <Button
-                      size="sm"
                       variant="outline"
-                      className="flex-1 border-[#CE2939] text-[#CE2939] hover:bg-[#CE2939] hover:text-white"
+                      className="flex-1 rounded-xl border-red-100 text-[#CE2939] hover:bg-red-50"
                       onClick={() => window.open(`sms:${friend.name}`, "_self")}
                     >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      Üzenet
+                      <MessageCircle className="w-4 h-4 mr-2" /> SMS
                     </Button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Tasks */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+        {/* Tasks - Egyszerűbb checkmark animációval */}
+        <motion.div
+          variants={cardVariants}
+          className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
+        >
           <div className="flex items-center gap-3 mb-6">
             <Target className="w-6 h-6 text-[#477050]" />
-            <h2 className="text-2xl font-bold text-gray-900">
-              Saját feladataim
+            <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">
+              Saját tennivalók
             </h2>
           </div>
 
           <div className="space-y-3">
             {tasks.map((task) => (
-              <label
+              <motion.label
                 key={task.id}
-                className="flex items-start gap-3 p-4 rounded-lg border-2 border-gray-200 hover:border-gray-300 cursor-pointer transition-all"
+                layout
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                  task.completed
+                    ? "border-gray-100 bg-gray-50/50"
+                    : "border-gray-100 hover:border-gray-200 shadow-sm"
+                }`}
               >
                 <Checkbox
                   checked={task.completed}
                   onCheckedChange={() => toggleTask(task.id)}
-                  className="mt-1"
                 />
                 <span
-                  className={`flex-1 text-lg ${task.completed ? "text-gray-500 line-through" : "text-gray-900"}`}
+                  className={`flex-1 font-medium ${task.completed ? "text-gray-400 line-through" : "text-gray-700"}`}
                 >
                   {task.text}
                 </span>
-                {task.completed && <Check className="w-5 h-5 text-[#477050]" />}
-              </label>
+                {task.completed && (
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                    <Check className="w-5 h-5 text-[#477050]" />
+                  </motion.div>
+                )}
+              </motion.label>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Election Day Reminder */}
-        <div className="bg-gradient-to-br from-[#477050] to-[#3A5A40] rounded-2xl shadow-lg p-8 text-white text-center">
-          <div className="text-5xl font-bold mb-3">Április 12</div>
-          <div className="text-xl mb-2">Választás napja</div>
-          <div className="text-sm opacity-90">
-            Ne feledd: mindenki számít! 🇭🇺
+        {/* Election Day Card - Finom lüktetéssel */}
+        <motion.div
+          variants={cardVariants}
+          animate={{ scale: [1, 1.02, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="bg-gray-900 rounded-3xl shadow-2xl p-10 text-white text-center"
+        >
+          <div className="text-6xl font-black mb-2 tracking-tighter">
+            ÁPRILIS 12
           </div>
-        </div>
+          <div className="text-xl font-bold text-[#CE2939] uppercase tracking-[0.3em] mb-4">
+            Választás napja
+          </div>
+          <div className="text-gray-400 font-medium italic">
+            "A szabadság ott kezdődik, ahol a félelem véget ér."
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
