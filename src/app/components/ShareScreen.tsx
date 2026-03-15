@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { Copy, Check, Share2, MessageCircle, Mail } from "lucide-react";
+import {
+  Copy,
+  Check,
+  Share2,
+  MessageCircle,
+  Mail,
+  Users,
+  Trophy,
+} from "lucide-react";
 
 interface ShareScreenProps {
   userName: string;
   friendsCount: number;
   onNext: () => void;
+  onLeaderboard: () => void;
   onBack: () => void;
 }
 
@@ -13,6 +22,7 @@ export function ShareScreen({
   userName,
   friendsCount,
   onNext,
+  onLeaderboard,
   onBack,
 }: ShareScreenProps) {
   const [copied, setCopied] = useState(false);
@@ -171,6 +181,15 @@ export function ShareScreen({
             className="w-full h-14 text-lg bg-[#CE2939] hover:bg-[#B02030] text-white"
           >
             Tovább a feladataimhoz
+          </Button>
+
+          <Button
+            onClick={onLeaderboard}
+            variant="outline"
+            className="w-full h-14 text-lg border-2 border-[#477050] text-[#477050] hover:bg-[#477050] hover:text-white flex items-center justify-center gap-2"
+          >
+            <Trophy className="w-5 h-5" />
+            Nézd meg, hányan vagyunk már! (Ranglista)
           </Button>
         </div>
       </div>

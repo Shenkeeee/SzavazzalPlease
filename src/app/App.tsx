@@ -4,8 +4,15 @@ import { CommitmentScreen } from "./components/CommitmentScreen";
 import { TimeSelectionScreen } from "./components/TimeSelectionScreen";
 import { ShareScreen } from "./components/ShareScreen";
 import { DashboardScreen } from "./components/DashboardScreen";
+import { SocialProofScreen } from "./components/SocialProofScreen";
 
-type Screen = "welcome" | "commitment" | "time" | "share" | "dashboard";
+type Screen =
+  | "welcome"
+  | "commitment"
+  | "time"
+  | "share"
+  | "dashboard"
+  | "socialProof";
 
 interface AppData {
   userName: string;
@@ -62,6 +69,10 @@ export default function App() {
     setCurrentScreen("dashboard");
   };
 
+  const handleLeaderboardClick = () => {
+    setCurrentScreen("socialProof");
+  };
+
   const handleReset = () => {
     const confirmReset = window.confirm(
       "Biztosan új tervezést szeretnél kezdeni? Ez törli a jelenlegi adataidat.",
@@ -87,6 +98,14 @@ export default function App() {
     if (currentIndex > 0) {
       setCurrentScreen(screenFlow[currentIndex - 1]);
     }
+  };
+
+  const goBackToShare = () => {
+    setCurrentScreen("share");
+  };
+
+  const goToDasboard = () => {
+    setCurrentScreen("dashboard");
   };
 
   return (
@@ -120,6 +139,7 @@ export default function App() {
           userName={appData.userName}
           friendsCount={appData.friends.filter((f) => f.trim()).length}
           onNext={handleShareComplete}
+          onLeaderboard={handleLeaderboardClick}
           onBack={goBack}
         />
       )}
@@ -131,6 +151,10 @@ export default function App() {
           scheduledTime={appData.scheduledTime}
           onReset={handleReset}
         />
+      )}
+
+      {currentScreen === "socialProof" && (
+        <SocialProofScreen onBack={goBackToShare} onForward={goToDasboard} />
       )}
     </div>
   );
