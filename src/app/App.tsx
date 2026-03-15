@@ -5,6 +5,7 @@ import { TimeSelectionScreen } from "./components/TimeSelectionScreen";
 import { ShareScreen } from "./components/ShareScreen";
 import { DashboardScreen } from "./components/DashboardScreen";
 import { SocialProofScreen } from "./components/SocialProofScreen";
+import { AdminDashboard } from "./components/AdminDashboard";
 
 type Screen =
   | "welcome"
@@ -12,6 +13,7 @@ type Screen =
   | "time"
   | "share"
   | "dashboard"
+  | "adminDashboard"
   | "socialProof";
 
 interface AppData {
@@ -31,6 +33,7 @@ const initialData: AppData = {
 export default function App() {
   const [appData, setAppData] = useState<AppData>(() => {
     const saved = localStorage.getItem("valasztas-app-data");
+    return initialData;
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -116,7 +119,6 @@ export default function App() {
           initialName={appData.userName}
         />
       )}
-
       {currentScreen === "commitment" && (
         <CommitmentScreen
           userName={appData.userName}
@@ -125,7 +127,6 @@ export default function App() {
           initialFriends={appData.friends}
         />
       )}
-
       {currentScreen === "time" && (
         <TimeSelectionScreen
           onNext={handleTimeSubmit}
@@ -133,7 +134,6 @@ export default function App() {
           initialSelection={appData.scheduledTime}
         />
       )}
-
       {currentScreen === "share" && (
         <ShareScreen
           userName={appData.userName}
@@ -143,7 +143,6 @@ export default function App() {
           onBack={goBack}
         />
       )}
-
       {currentScreen === "dashboard" && (
         <DashboardScreen
           userName={appData.userName}
@@ -152,10 +151,22 @@ export default function App() {
           onReset={handleReset}
         />
       )}
-
+      {currentScreen === "adminDashboard" && <AdminDashboard />}
       {currentScreen === "socialProof" && (
         <SocialProofScreen onBack={goBackToShare} onForward={goToDasboard} />
       )}
+
+      <footer className="fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-2 flex justify-between items-center text-[10px] uppercase tracking-widest opacity-80 hover:opacity-100 transition-opacity z-50">
+        <div className="flex gap-4 items-center ml-2">
+          <span className="text-slate-500 font-bold">Admin Panel:</span>
+          <button
+            onClick={() => setCurrentScreen("adminDashboard")}
+            className={`hover:text-[#CE2939] transition-colors ${currentScreen === "adminDashboard" ? "text-[#CE2939]" : ""}`}
+          >
+            Analytics
+          </button>
+        </div>
+      </footer>
     </div>
   );
 }
