@@ -1,4 +1,4 @@
-# Valasztasi Mozgosito PWA
+# Valasztasi Mozgosito Webapp
 
 ## Projekt osszefoglalo
 
@@ -17,7 +17,7 @@ Ez a mobilra optimalizalt webalkalmazas a peer-to-peer (P2P) mozgositas erejevel
 - **Frontend:** React (Vite)
 - **Styling:** Tailwind CSS
 - **Icons:** Lucide-react
-- **Architecture:** PWA (Progressive Web App) a telepites nelkuli elereshez es offline tamogatashoz.
+- **Architecture:** Webapp a telepites nelkuli elereshez es offline tamogatashoz.
 
 ## Telepites es futtatas
 
