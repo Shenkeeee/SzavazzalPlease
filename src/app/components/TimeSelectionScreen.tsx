@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Calendar, Clock } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Calendar, Clock } from "lucide-react";
 
 interface TimeSelectionScreenProps {
   onNext: (selectedTime: { date: string; time: string }) => void;
@@ -9,24 +9,47 @@ interface TimeSelectionScreenProps {
 }
 
 const timeSlots = [
-  '08:00', '09:00', '10:00', '11:00', '12:00',
-  '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
+  "08:00",
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00",
+  "19:00",
+  "20:00",
 ];
 
 const dates = [
-  { date: '2026-04-05', label: 'Április 5', day: 'Vasárnap' },
-  { date: '2026-04-06', label: 'Április 6', day: 'Hétfő' },
-  { date: '2026-04-07', label: 'Április 7', day: 'Kedd' },
-  { date: '2026-04-08', label: 'Április 8', day: 'Szerda' },
-  { date: '2026-04-09', label: 'Április 9', day: 'Csütörtök' },
-  { date: '2026-04-10', label: 'Április 10', day: 'Péntek' },
-  { date: '2026-04-11', label: 'Április 11', day: 'Szombat' },
-  { date: '2026-04-12', label: 'Április 12', day: 'VÁLASZTÁS NAP', featured: true },
+  { date: "2026-04-05", label: "Április 5", day: "Vasárnap" },
+  { date: "2026-04-06", label: "Április 6", day: "Hétfő" },
+  { date: "2026-04-07", label: "Április 7", day: "Kedd" },
+  { date: "2026-04-08", label: "Április 8", day: "Szerda" },
+  { date: "2026-04-09", label: "Április 9", day: "Csütörtök" },
+  { date: "2026-04-10", label: "Április 10", day: "Péntek" },
+  { date: "2026-04-11", label: "Április 11", day: "Szombat" },
+  {
+    date: "2026-04-12",
+    label: "Április 12",
+    day: "VÁLASZTÁS NAP",
+    featured: true,
+  },
 ];
 
-export function TimeSelectionScreen({ onNext, onBack, initialSelection }: TimeSelectionScreenProps) {
-  const [selectedDate, setSelectedDate] = useState(initialSelection?.date || '');
-  const [selectedTime, setSelectedTime] = useState(initialSelection?.time || '');
+export function TimeSelectionScreen({
+  onNext,
+  onBack,
+  initialSelection,
+}: TimeSelectionScreenProps) {
+  const [selectedDate, setSelectedDate] = useState(
+    initialSelection?.date || "",
+  );
+  const [selectedTime, setSelectedTime] = useState(
+    initialSelection?.time || "",
+  );
 
   const handleSubmit = () => {
     if (selectedDate && selectedTime) {
@@ -72,14 +95,16 @@ export function TimeSelectionScreen({ onNext, onBack, initialSelection }: TimeSe
                   onClick={() => setSelectedDate(dateOption.date)}
                   className={`p-4 rounded-lg border-2 transition-all ${
                     selectedDate === dateOption.date
-                      ? 'border-[#CE2939] bg-[#CE2939] text-white'
+                      ? "border-[#CE2939] bg-[#CE2939] text-white"
                       : dateOption.featured
-                      ? 'border-[#477050] hover:border-[#477050] hover:bg-[#477050]/10'
-                      : 'border-gray-200 hover:border-gray-300'
-                  } ${dateOption.featured ? 'font-bold' : ''}`}
+                        ? "border-[#477050] hover:border-[#477050] hover:bg-[#477050]/10"
+                        : "border-gray-200 hover:border-gray-300"
+                  } ${dateOption.featured ? "font-bold" : ""}`}
                 >
                   <div className="text-sm">{dateOption.day}</div>
-                  <div className={`text-base ${dateOption.featured ? 'text-lg' : ''}`}>
+                  <div
+                    className={`text-base ${dateOption.featured ? "text-lg" : ""}`}
+                  >
                     {dateOption.label}
                   </div>
                 </button>
@@ -100,8 +125,8 @@ export function TimeSelectionScreen({ onNext, onBack, initialSelection }: TimeSe
                   onClick={() => setSelectedTime(time)}
                   className={`p-3 rounded-lg border-2 transition-all ${
                     selectedTime === time
-                      ? 'border-[#477050] bg-[#477050] text-white'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? "border-[#477050] bg-[#477050] text-white"
+                      : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   {time}
@@ -115,7 +140,9 @@ export function TimeSelectionScreen({ onNext, onBack, initialSelection }: TimeSe
             className="w-full h-14 text-lg bg-[#477050] hover:bg-[#3A5A40] text-white mt-8"
             disabled={!canProceed}
           >
-            {canProceed ? 'Tovább a megosztáshoz' : 'Válassz napot és időpontot'}
+            {canProceed
+              ? "Tovább a megosztáshoz"
+              : "Válassz napot és időpontot"}
           </Button>
         </div>
       </div>

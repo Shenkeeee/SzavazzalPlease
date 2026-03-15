@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { UserPlus, Check } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { UserPlus, Check } from "lucide-react";
 
 interface CommitmentScreenProps {
   userName: string;
@@ -11,7 +11,12 @@ interface CommitmentScreenProps {
   initialFriends?: string[];
 }
 
-export function CommitmentScreen({ userName, onNext, onBack, initialFriends = ['', '', ''] }: CommitmentScreenProps) {
+export function CommitmentScreen({
+  userName,
+  onNext,
+  onBack,
+  initialFriends = ["", "", ""],
+}: CommitmentScreenProps) {
   const [friends, setFriends] = useState<string[]>(initialFriends);
 
   const handleFriendChange = (index: number, value: string) => {
@@ -22,13 +27,13 @@ export function CommitmentScreen({ userName, onNext, onBack, initialFriends = ['
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const validFriends = friends.filter(f => f.trim());
+    const validFriends = friends.filter((f) => f.trim());
     if (validFriends.length > 0) {
       onNext(friends);
     }
   };
 
-  const filledCount = friends.filter(f => f.trim()).length;
+  const filledCount = friends.filter((f) => f.trim()).length;
   const canProceed = filledCount > 0;
 
   return (
@@ -57,7 +62,10 @@ export function CommitmentScreen({ userName, onNext, onBack, initialFriends = ['
           <form onSubmit={handleSubmit} className="space-y-6">
             {[0, 1, 2].map((index) => (
               <div key={index} className="space-y-2">
-                <Label htmlFor={`friend-${index}`} className="text-lg flex items-center gap-2">
+                <Label
+                  htmlFor={`friend-${index}`}
+                  className="text-lg flex items-center gap-2"
+                >
                   <UserPlus className="w-5 h-5 text-[#CE2939]" />
                   {index + 1}. személy
                   {friends[index]?.trim() && (
@@ -69,7 +77,7 @@ export function CommitmentScreen({ userName, onNext, onBack, initialFriends = ['
                   type="text"
                   value={friends[index]}
                   onChange={(e) => handleFriendChange(index, e.target.value)}
-                  placeholder={`pl. ${index === 0 ? 'Kovács Anna' : index === 1 ? 'Nagy Péter' : 'Szabó Eszter'}`}
+                  placeholder={`pl. ${index === 0 ? "Kovács Anna" : index === 1 ? "Nagy Péter" : "Szabó Eszter"}`}
                   className="h-14 text-lg"
                 />
               </div>
@@ -77,10 +85,10 @@ export function CommitmentScreen({ userName, onNext, onBack, initialFriends = ['
 
             <div className="pt-4">
               <div className="mb-3 text-sm text-gray-600">
-                {filledCount === 0 && 'Adj meg legalább 1 személyt'}
-                {filledCount === 1 && '1 személy hozzáadva - adj meg többet!'}
-                {filledCount === 2 && '2 személy hozzáadva - még 1!'}
-                {filledCount === 3 && '🎉 Mind a 3 személy hozzáadva!'}
+                {filledCount === 0 && "Adj meg legalább 1 személyt"}
+                {filledCount === 1 && "1 személy hozzáadva - adj meg többet!"}
+                {filledCount === 2 && "2 személy hozzáadva - még 1!"}
+                {filledCount === 3 && "🎉 Mind a 3 személy hozzáadva!"}
               </div>
               <Button
                 type="submit"

@@ -1,14 +1,17 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 interface WelcomeScreenProps {
   onNext: (name: string) => void;
   initialName?: string;
 }
 
-export function WelcomeScreen({ onNext, initialName = '' }: WelcomeScreenProps) {
+export function WelcomeScreen({
+  onNext,
+  initialName = "",
+}: WelcomeScreenProps) {
   const [name, setName] = useState(initialName);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,9 +30,7 @@ export function WelcomeScreen({ onNext, initialName = '' }: WelcomeScreenProps) 
             <div className="w-3 h-16 bg-white border-2 border-gray-200" />
             <div className="w-3 h-16 bg-[#477050]" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900">
-            Április 12
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900">Április 12</h1>
           <p className="text-xl text-gray-600">
             Mozgósítsuk együtt az embereket!
           </p>

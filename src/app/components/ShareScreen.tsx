@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
-import { Copy, Check, Share2, MessageCircle, Mail } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { Copy, Check, Share2, MessageCircle, Mail } from "lucide-react";
 
 interface ShareScreenProps {
   userName: string;
@@ -9,10 +9,15 @@ interface ShareScreenProps {
   onBack: () => void;
 }
 
-export function ShareScreen({ userName, friendsCount, onNext, onBack }: ShareScreenProps) {
+export function ShareScreen({
+  userName,
+  friendsCount,
+  onNext,
+  onBack,
+}: ShareScreenProps) {
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = `https://valasztas2026.hu/mozgositas/${userName.toLowerCase().replace(/\s+/g, '-')}`;
+  const shareUrl = `https://valasztas2026.hu/mozgositas/${userName.toLowerCase().replace(/\s+/g, "-")}`;
   const shareText = `Szia! 👋\n\nÉn már elköteleződtem, hogy szavazok április 12-én! 🇭🇺\n\nSzámítok rád is - gyere el te is szavazni!\n\nCsatlakozz hozzám: ${shareUrl}`;
 
   const handleCopyLink = async () => {
@@ -22,11 +27,11 @@ export function ShareScreen({ userName, friendsCount, onNext, onBack }: ShareScr
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       // Fallback for browsers that don't support clipboard API
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = shareUrl;
       document.body.appendChild(textArea);
       textArea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(textArea);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -39,11 +44,11 @@ export function ShareScreen({ userName, friendsCount, onNext, onBack }: ShareScr
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = shareText;
       document.body.appendChild(textArea);
       textArea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(textArea);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -80,25 +85,21 @@ export function ShareScreen({ userName, friendsCount, onNext, onBack }: ShareScr
               <div className="w-2 h-12 bg-white border-2 border-gray-300" />
               <div className="w-2 h-12 bg-[#477050]" />
             </div>
-            
+
             <h3 className="text-2xl font-bold text-center text-gray-900 mb-4">
               {userName} elkötelezte magát
             </h3>
-            
+
             <div className="bg-white rounded-lg p-6 border-2 border-gray-200 mb-6">
               <div className="text-center space-y-3">
                 <div className="text-5xl font-bold text-[#CE2939]">
                   {friendsCount}
                 </div>
-                <div className="text-lg text-gray-700">
-                  ember mozgósítása
-                </div>
+                <div className="text-lg text-gray-700">ember mozgósítása</div>
                 <div className="text-3xl font-bold text-gray-900 mt-4">
                   Április 12
                 </div>
-                <div className="text-gray-600">
-                  Választás napja
-                </div>
+                <div className="text-gray-600">Választás napja</div>
               </div>
             </div>
 
@@ -139,7 +140,12 @@ export function ShareScreen({ userName, friendsCount, onNext, onBack }: ShareScr
               <Button
                 variant="outline"
                 className="h-12 border-gray-300 hover:bg-gray-100"
-                onClick={() => window.open(`mailto:?subject=Gyere el szavazni!&body=${encodeURIComponent(shareText)}`, '_blank')}
+                onClick={() =>
+                  window.open(
+                    `mailto:?subject=Gyere el szavazni!&body=${encodeURIComponent(shareText)}`,
+                    "_blank",
+                  )
+                }
               >
                 <Mail className="w-5 h-5 mr-2" />
                 Email
@@ -147,7 +153,12 @@ export function ShareScreen({ userName, friendsCount, onNext, onBack }: ShareScr
               <Button
                 variant="outline"
                 className="h-12 border-gray-300 hover:bg-gray-100"
-                onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank')}
+                onClick={() =>
+                  window.open(
+                    `https://wa.me/?text=${encodeURIComponent(shareText)}`,
+                    "_blank",
+                  )
+                }
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
                 WhatsApp
