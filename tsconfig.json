@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // modern JavaScript
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"], // include browser + modern JS libs
+    "types": ["vite/client"],
+    "strict": true,
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
